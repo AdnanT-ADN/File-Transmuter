@@ -19,41 +19,43 @@ class BFS:
     def get_route(self, init_point: str, destination_point: str):
         route = []
         self._rest_variables()
-        # TODO Check that init point and destination point are in the network
-        
-        # Set start point
-        self._queue.put(init_point)
-        self._bfs_table[init_point] = {
-            "node_visited": True,
-            # "distance_traveled": 0,
-            "from_node": init_point
-        }
-        
-        # Find Paths
-        queued_items = [init_point]
-        while not self._bfs_table[destination_point]["node_visited"] and not self._queue.empty():
-            # Set current file type
-            current_file_type = self._queue.get()
-            current_node = self._network.get_nodes_connected_to(current_file_type)
-            # Set nodes visited and distance
-            for file_type in self._network.get_nodes_connected_to(current_file_type):
-                if not self._bfs_table[file_type]["node_visited"]:
-                    self._bfs_table[file_type] = {
-                        "node_visited": True,
-                        # "distance_traveled": 
-                        "from_node": current_file_type
-                    }
-                if file_type not in queued_items:
-                    self._queue.put(file_type)
-                    queued_items.append(file_type)
-        # Return connected path as a list
-        if self._bfs_table[destination_point]["from_node"] != "":
-            # There is a route
-            route = [destination_point]
-            current_file_type = destination_point
-            while current_file_type != init_point:
-                route.append(self._bfs_table[current_file_type]["from_node"])
-                current_file_type = self._bfs_table[current_file_type]["from_node"]
+        file_types_supported, non_supported_file_types = self._network.check_file_types_in_network(init_point, destination_point)
+        if file_types_supported:
+            # Set start point
+            self._queue.put(init_point)
+            self._bfs_table[init_point] = {
+                "node_visited": True,
+                # "distance_traveled": 0,
+                "from_node": init_point
+            }
+            
+            # Find Paths
+            queued_items = [init_point]
+            while not self._bfs_table[destination_point]["node_visited"] and not self._queue.empty():
+                # Set current file type
+                current_file_type = self._queue.get()
+                current_node = self._network.get_nodes_connected_to(current_file_type)
+                # Set nodes visited and distance
+                for file_type in self._network.get_nodes_connected_to(current_file_type):
+                    if not self._bfs_table[file_type]["node_visited"]:
+                        self._bfs_table[file_type] = {
+                            "node_visited": True,
+                            # "distance_traveled": 
+                            "from_node": current_file_type
+                        }
+                    if file_type not in queued_items:
+                        self._queue.put(file_type)
+                        queued_items.append(file_type)
+            # Return connected path as a list
+            if self._bfs_table[destination_point]["from_node"] != "":
+                # There is a route
+                route = [destination_point]
+                current_file_type = destination_point
+                while current_file_type != init_point:
+                    route.append(self._bfs_table[current_file_type]["from_node"])
+                    current_file_type = self._bfs_table[current_file_type]["from_node"]
+        else:
+            raise KeyError("Not supported File Types: " + ', '.join(non_supported_file_types))
         
         return route[::-1]
     
