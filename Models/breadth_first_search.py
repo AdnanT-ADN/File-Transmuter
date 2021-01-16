@@ -19,6 +19,7 @@ class BFS:
     def get_route(self, init_point: str, destination_point: str):
         route = []
         self._rest_variables()
+        init_point, destination_point = init_point.upper(), destination_point.upper()
         file_types_supported, non_supported_file_types = self._network.check_file_types_in_network(init_point, destination_point)
         if file_types_supported:
             # Set start point

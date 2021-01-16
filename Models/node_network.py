@@ -28,7 +28,7 @@ class node_network:
     
     def add_file_type(self, file_type: str) -> None:
         if file_type in self._file_types:
-            raise Exception("File type already exists in the network")
+            raise KeyError("File type already exists in the network")
         else:
             self._file_types[file_type] = self._Node()
     
