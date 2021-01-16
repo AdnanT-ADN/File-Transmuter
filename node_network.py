@@ -1,19 +1,27 @@
 import array
 class node_network:
-    
+    __slots__ = ["_file_types"]
     class _Node:
+        __slots__ = ["_connected_file_types", "_converstion_types"]
         
         def __init__(self):
             self._connected_file_types = []
+            self._converstion_types = []
         
-        def add_file_connection(self, file_type: str):
+        def add_file_connection(self, file_type: str, converstion_type: str):
             if file_type not in self._connected_file_types:
                 self._connected_file_types.append(file_type)
+                if converstion_type not in self._converstion_types:
+                    self._converstion_types.append(converstion_type)
         
         @property
         def connected_file_types(self):
             """ Returns generator of all connected file type names"""
             return (x for x in self._connected_file_types)
+        
+        @property
+        def converstion_types(self) -> list:
+            return self._converstion_types
     
     def __init__(self):
         self._file_types = {}
@@ -35,10 +43,10 @@ class node_network:
         """ Returns generator """
         return (x for x in self._file_types)
     
-    def add_file_connection_from_to(self, file_type_from: str, file_type_to: str) -> None:
+    def add_file_connection_from_to(self, file_type_from: str, file_type_to: str, converstion_type: str) -> None:
         file_types_supported, non_supported_file_types = self.check_file_types_in_network(file_type_from, file_type_to)
         if file_types_supported:
-            self._file_types[file_type_from].add_file_connection(file_type_to)
+            self._file_types[file_type_from].add_file_connection(file_type_to, converstion_type)
         else:
             raise KeyError("Not supported File Types: " + ', '.join(non_supported_file_types))
     
@@ -50,3 +58,10 @@ class node_network:
                 is_present = False
                 non_present_file_types.append(file_type)
         return is_present, non_present_file_types
+    
+    def get_converstion_types(self, file_type: str) -> list:
+        file_types_supported, non_supported_file_types = self.check_file_types_in_network(file_type)
+        if file_types_supported:
+            return self._file_types[file_type].converstion_types
+        else:
+            raise KeyError("Not supported File Types: " + ', '.join(non_supported_file_types))

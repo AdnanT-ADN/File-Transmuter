@@ -54,10 +54,23 @@ class BFS:
                 while current_file_type != init_point:
                     route.append(self._bfs_table[current_file_type]["from_node"])
                     current_file_type = self._bfs_table[current_file_type]["from_node"]
+            
+            # Format Route
+            formatted_route = []
+            i = 0
+            route.reverse()
+            while i < len(route):
+                if i + 1 < len(route):
+                    file_type_1 = route[i]
+                    file_type_2 = route[i + 1]
+                    common_format = list(set(self._network.get_converstion_types(file_type_1)).intersection(set(self._network.get_converstion_types(file_type_2))))[0]
+                    formatted_route.append((file_type_1, file_type_2, common_format))
+                i += 1
+            route = formatted_route
         else:
             raise KeyError("Not supported File Types: " + ', '.join(non_supported_file_types))
         
-        return route[::-1]
+        return route
     
     def _rest_variables(self) -> None:
         self._queue = Queue()
@@ -114,56 +127,57 @@ if __name__ == "__main__":
     nn.add_file_type("B2")
     nn.add_file_type("B3")
     
-    nn.add_file_connection_from_to("png", "jpg")
-    nn.add_file_connection_from_to("png", "ico")
-    nn.add_file_connection_from_to("png", "gif")
-    nn.add_file_connection_from_to("png", "pdf")
+    nn.add_file_connection_from_to("png", "jpg", "image")
+    nn.add_file_connection_from_to("png", "ico", "image")
+    nn.add_file_connection_from_to("png", "gif", "image")
+    nn.add_file_connection_from_to("png", "pdf", "image")
     
-    nn.add_file_connection_from_to("jpg", "png")
-    nn.add_file_connection_from_to("jpg", "ico")
-    nn.add_file_connection_from_to("jpg", "gif")
-    nn.add_file_connection_from_to("jpg", "pdf")
+    nn.add_file_connection_from_to("jpg", "png", "image")
+    nn.add_file_connection_from_to("jpg", "ico", "image")
+    nn.add_file_connection_from_to("jpg", "gif", "image")
+    nn.add_file_connection_from_to("jpg", "pdf", "image")
     
-    nn.add_file_connection_from_to("ico", "jpg")
-    nn.add_file_connection_from_to("ico", "png")
-    nn.add_file_connection_from_to("ico", "gif")
-    nn.add_file_connection_from_to("ico", "pdf")
+    nn.add_file_connection_from_to("ico", "jpg", "image")
+    nn.add_file_connection_from_to("ico", "png", "image")
+    nn.add_file_connection_from_to("ico", "gif", "image")
+    nn.add_file_connection_from_to("ico", "pdf", "image")
     
-    nn.add_file_connection_from_to("gif", "jpg")
-    nn.add_file_connection_from_to("gif", "ico")
-    nn.add_file_connection_from_to("gif", "png")
-    nn.add_file_connection_from_to("gif", "pdf")
+    nn.add_file_connection_from_to("gif", "jpg", "image")
+    nn.add_file_connection_from_to("gif", "ico", "image")
+    nn.add_file_connection_from_to("gif", "png", "image")
+    nn.add_file_connection_from_to("gif", "pdf", "image")
     
-    nn.add_file_connection_from_to("pdf", "jpg")
-    nn.add_file_connection_from_to("pdf", "ico")
-    nn.add_file_connection_from_to("pdf", "gif")
-    nn.add_file_connection_from_to("pdf", "png")
-    nn.add_file_connection_from_to("pdf", "word")
+    nn.add_file_connection_from_to("pdf", "jpg", "image")
+    nn.add_file_connection_from_to("pdf", "ico", "image")
+    nn.add_file_connection_from_to("pdf", "gif", "image")
+    nn.add_file_connection_from_to("pdf", "png", "image")
+    nn.add_file_connection_from_to("pdf", "word", "document")
     
-    nn.add_file_connection_from_to("word", "pdf")
-    nn.add_file_connection_from_to("word", "A2")
-    nn.add_file_connection_from_to("word", "A3")
+    nn.add_file_connection_from_to("word", "pdf", "document")
+    nn.add_file_connection_from_to("word", "A2", "document")
+    nn.add_file_connection_from_to("word", "A3", "document")
     
-    nn.add_file_connection_from_to("A1", "A2")
+    nn.add_file_connection_from_to("A1", "A2", "document")
     
-    nn.add_file_connection_from_to("A2", "A1")
-    nn.add_file_connection_from_to("A2", "word")
-    nn.add_file_connection_from_to("A2", "A3")
-    nn.add_file_connection_from_to("A2", "B1")
+    nn.add_file_connection_from_to("A2", "A1", "document")
+    nn.add_file_connection_from_to("A2", "word", "document")
+    nn.add_file_connection_from_to("A2", "A3", "document")
+    nn.add_file_connection_from_to("A2", "B1", "b-type")
     
-    nn.add_file_connection_from_to("A3", "word")
-    nn.add_file_connection_from_to("A3", "A2")
+    nn.add_file_connection_from_to("A3", "word", "document")
+    nn.add_file_connection_from_to("A3", "A2", "document")
     
-    nn.add_file_connection_from_to("B1", "A2")
-    nn.add_file_connection_from_to("B1", "B2")
+    nn.add_file_connection_from_to("B1", "A2", "document")
+    nn.add_file_connection_from_to("B1", "B2", "b-type")
     
-    nn.add_file_connection_from_to("B2", "B1")
-    nn.add_file_connection_from_to("B2", "B3")
+    nn.add_file_connection_from_to("B2", "B1", "b-type")
+    nn.add_file_connection_from_to("B2", "B3", "b-type")
     
-    nn.add_file_connection_from_to("B3", "B2")
+    nn.add_file_connection_from_to("B3", "B2", "b-type")
     
     b = BFS(nn)
     print(b.get_route("jpg", "B2"))
+    print(b.get_route("jpg", "A1"))
     
     
     
