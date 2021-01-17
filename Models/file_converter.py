@@ -1,6 +1,6 @@
 import os.path as pathlib
 
-class file_converter:
+class FileConverter:
     
     def __init__(self):
         self._writable_file_types = []

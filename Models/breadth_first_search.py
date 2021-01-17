@@ -177,8 +177,8 @@ if __name__ == "__main__":
     nn.add_file_connection_from_to("B3", "B2", "b-type")
     
     b = BFS(nn)
-    print(b.get_route("jpg", "B2"))
-    print(b.get_route("jpg", "A1"))
+    # print(b.get_route("jpg", "B2"))
+    # print(b.get_route("jpg", "A1"))
     
     
     

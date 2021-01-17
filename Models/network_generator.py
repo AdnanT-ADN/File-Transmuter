@@ -63,9 +63,17 @@ def update_node_network(nn: node_network, read_write_permission: list, read_perm
         for file_type_to in (y for y in read_write_permission + write_permission):
             nn.add_file_connection_from_to(file_type_from, file_type_to, converstion_type)
     
+    for file_type_from in (x for x in read_write_permission + read_permission):
+        for file_type_to in (y for y in write_permission):
+            nn.add_file_connection_from_to(file_type_from, file_type_to, converstion_type)
     return nn
 
 if __name__ == "__main__":
     N = create_network()
     bfs = BFS(N)
-    print(bfs.get_route("png", "jpeg 2000"))
+    # print([x for x in N.get_file_types_in_network()])
+    print(bfs.get_route("pdf", "png"))
+    # for i in N.get_file_types_in_network():
+    #     ii = N.get_converstion_types(i)
+    #     if len(ii) > 1:
+    #         print(i, ii, len(ii))

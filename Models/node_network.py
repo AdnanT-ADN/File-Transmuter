@@ -30,6 +30,7 @@ class node_network:
         if file_type in self._file_types:
             raise KeyError("File type already exists in the network")
         else:
+            file_type = file_type.upper()
             self._file_types[file_type] = self._Node()
     
     def get_nodes_connected_to(self, file_type: str):
@@ -44,9 +45,12 @@ class node_network:
         return (x for x in self._file_types)
     
     def add_file_connection_from_to(self, file_type_from: str, file_type_to: str, converstion_type: str) -> None:
+        file_type_from, file_type_to = file_type_from.upper(), file_type_to.upper()
         file_types_supported, non_supported_file_types = self.check_file_types_in_network(file_type_from, file_type_to)
         if file_types_supported:
             self._file_types[file_type_from].add_file_connection(file_type_to, converstion_type)
+            if converstion_type not in self._file_types[file_type_to].converstion_types:
+                self._file_types[file_type_to].converstion_types.append(converstion_type)
         else:
             raise KeyError("Not supported File Types: " + ', '.join(non_supported_file_types))
     
